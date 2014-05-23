@@ -4,7 +4,7 @@ window.onload = function()
 {
 	// ゲーム作成
 	g_game = new Game(WIN_SIZE_WIDTH, WIN_SIZE_HEIGHT);
-	g_game.fps = 20;
+	g_game.fps = GAME_FPS;
 	
 	// 画像のプリロード
 	TexturePreLoad();

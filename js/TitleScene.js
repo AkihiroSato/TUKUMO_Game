@@ -11,11 +11,11 @@ TitleScene = Class.create(Scene,{
 		titleBackGraph.y = 0;
 		this.addChild(titleBackGraph);
 		
-		// タッチをしたらシーンを切り替える
+		// タッチをしたらフェードアウトに入る
 		this.ontouchstart = function()
 		{
 			var gameScene = new GameScene();
-			g_game.replaceScene(gameScene);
+			SceneFadeOut(this, gameScene, "black", SCENE_FADE_TIME);
 		}
 	}
 })
