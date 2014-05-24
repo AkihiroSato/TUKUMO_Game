@@ -1,12 +1,15 @@
-ItemMgr = Class.create({
-	initialize:function(addNode, player)
+ItemMgr = Class.create(EventTarget,{
+	initialize:function(addNode)
 	{
+		EventTarget.call(this);
+		
 		this.m_items = [];			// アイテムの配列
 		this.m_addNode = addNode;	// アイテムを追加するノード
-		this.m_player = player;
 		
 		//===============================================================
-		// 配列にアイテムを登録する
+		// 役割		: 配列にアイテムを追加する
+		// 第一引数	: 追加するアイテム
+		// 戻り値		: なし
 		//===============================================================
 		this.AddItem = function(item)
 		{
@@ -17,7 +20,7 @@ ItemMgr = Class.create({
 		// 更新処理
 		//===============================================================
 		this.onenterframe = function(){
-			for(var i = 0; i < this.m_item.length; i++)
+			for(var i = 0; i < this.m_items.length; i++)
 			{
 				// 画面外に出たら消す
 				if(this.m_items[i].y > WIN_SIZE_HEIGHT)
@@ -25,19 +28,21 @@ ItemMgr = Class.create({
 					this.m_items[i].parentNode.removeChild(this.m_items[i]);
 					this.m_items.splice(i, 1);
 				}
-
 			}
 		}
 		
 		//===============================================================
-		// あたり判定をとる
+		// 役割		: あたり判定をとる
+		// 第一引数	:　商品とのあたり判定をとるオブジェクト
+		// 戻り値		: 当たっていたらtrue, そうでなければfalse
 		//===============================================================
-		this.Hit = function()
+		this.Hit = function(player)
 		{
+			var hitFlag = false;
 			for(var i = 0; i < this.m_items.length; i++)
 			{
 				// プレイヤーと当たり判定をとる
-				if(this.m_player.intersect(this.m_items[i]))
+				if(player.intersect(this.m_items[i]))
 				{
 					this.m_items[i].parentNode.removeChild(this.m_items[i]);
 					this.m_items.splice(i, 1);
@@ -47,8 +52,8 @@ ItemMgr = Class.create({
 					
 					// ゲットラベルを表示させる
 					var getLabel = new Label('Get!');
-					getLabel.x = this.m_player.x;
-					getLabel.y = this.m_player.y - 20;
+					getLabel.x = player.x;
+					getLabel.y = player.y - 20;
 					getLabel.count = 0;
 					
 					// 文字アップ＆消失
@@ -62,8 +67,11 @@ ItemMgr = Class.create({
 						}
 					}
 					this.m_addNode.addChild(getLabel);
+					hitFlag = true;
 				}
 			}
+			
+			return hitFlag;
 		}
 		
 	}

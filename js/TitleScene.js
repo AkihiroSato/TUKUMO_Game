@@ -11,11 +11,21 @@ TitleScene = Class.create(Scene,{
 		titleBackGraph.y = 0;
 		this.addChild(titleBackGraph);
 		
+		// スタートボタンを作成
+		var sceneChangeButton = new SceneChangeButton(200, 60, TEX_START_BUTTON, GameScene, this, "black", 40);
+		this.addChild(sceneChangeButton);
+		
+		// スタートボタンを中央に配置する
+		sceneChangeButton.x = 100;
+		sceneChangeButton.y = 200;
+		
+		/*
 		// タッチをしたらフェードアウトに入る
 		this.ontouchstart = function()
 		{
 			var gameScene = new GameScene();
 			SceneFadeOut(this, gameScene, "black", SCENE_FADE_TIME);
 		}
+		*/
 	}
 })

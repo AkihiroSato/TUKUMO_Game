@@ -14,7 +14,12 @@ GameScene = Class.create(Scene,{
 		var timerLabel = new Label();		// 残り時間を表示
 		var timer;							// タイマー
 		var timeGraphArray = [];			// タイムを表示する画像配列（2ケタ）
-				
+		var tukumo = null;					// つくもたん
+		var labi = null;					// らびたん
+		var labi_icon = null;				// らびたんのお助けアイコン
+		var junk_icon = null;				// じゃんくたんのお助けアイコン
+		var thisScene = this;
+		
 		// ゲームカウントを初期化
 		g_game.frame = 0;
 		
@@ -25,11 +30,22 @@ GameScene = Class.create(Scene,{
 			touchPoint.x = e.x;
 			touchPoint.y = e.y;
 			
-			// つくもたんに移動ポイントを渡す
-			tukumo.movePointX = touchPoint.x;
+			// ゲーム範囲内をタッチした場合、つくもたんに移動ポイントを渡す
+			if(touchPoint.x < GAME_SIZE_WIDTH)
+			{
+				tukumo.m_moveFlag = true;
+				tukumo.movePointX = touchPoint.x;
+			}
 		}
 		
+		// イベントを登録
+		this.ontouchstart = GetTouchPoint;
+		
+		
+		//------------------------------------------------------------------
 		// ゲームのUI部分を作成する
+		//------------------------------------------------------------------
+		
 		var uiGroup = new Group();				// ゲームのグループ
 		this.addChild(uiGroup);					// ゲームグループを追加
 		var gameRightSpace = new Sprite(GAME_RIGHT_SPACE, WIN_SIZE_HEIGHT);
@@ -54,30 +70,59 @@ GameScene = Class.create(Scene,{
 			timeGraphArray.push(numberSprite);
 		}
 		
-		// つくもたん作成
-		var tukumo = new TukumoTan();
+		
+		//------------------------------------------------------------------
+		// アイテム管理を作成
+		//------------------------------------------------------------------
+		
+		var itemMgr = new ItemMgr(this);
+		this.addChild(itemMgr);
+		
+		//------------------------------------------------------------------
+		// つくもたんを生成
+		//------------------------------------------------------------------
+		
+		tukumo = new TukumoTan(itemMgr);
 		this.insertBefore(tukumo, uiGroup);
 		
-		// アイテム管理を作成
-		var itemMgr = new ItemMgr(this, tukumo);
+		
+		//------------------------------------------------------------------
+		// お助けキャラアイコンを生成する
+		//------------------------------------------------------------------
+		
+		// らびたんアイコン
+		labi_icon = new Sprite(SUPPORT_CION_SIZE, SUPPORT_CION_SIZE);
+		labi_icon.image = g_game.assets[TEX_LABI_ICON];
+		labi_icon.x = GAME_SIZE_WIDTH + (GAME_RIGHT_SPACE - labi_icon.width) * 0.5;
+		labi_icon.y = 150;
+		labi_icon.ontouchstart = function()
+		{
+			// らびたん生成
+			labi = new LabiTan(itemMgr);
+			thisScene.insertBefore(labi, uiGroup);
+		}
+		uiGroup.addChild(labi_icon);
+		
+		// じゃんくたんアイコン
+		junk_icon = new Sprite(SUPPORT_CION_SIZE, SUPPORT_CION_SIZE);
+		junk_icon.image = g_game.assets[TEX_JUNK_ICON];
+		junk_icon.x = GAME_SIZE_WIDTH + (GAME_RIGHT_SPACE - junk_icon.width) * 0.5;
+		junk_icon.y = 250;
+		uiGroup.addChild(junk_icon);
 		
 		// 得点を表示
 		getPointLabel.x = GAME_SIZE_WIDTH;
 		getPointLabel.y = 0;
 		getPointLabel.font = "italic 32px 'ＭＳ 明朝'";
-		uiGroup.addChild(getPointLabel);
-		
-		// タイマーを表示
-		timerLabel.x = GAME_SIZE_WIDTH;
-		timerLabel.y = WIN_SIZE_HEIGHT - 100;
-		timerLabel.font = "italic 32px 'MS 明朝'";
-		uiGroup.addChild(timerLabel);
+		uiGroup.addChild(getPointLabel);		
 		
 		
-		// イベントを登録
-		this.ontouchstart = GetTouchPoint;
 		
+		
+		//=====================================================================
 		// 更新処理
+		//=====================================================================
+		
 		this.onenterframe =function()
 		{			
 			// カウンター増加
@@ -90,8 +135,7 @@ GameScene = Class.create(Scene,{
 			if(timer < 0)
 			{
 				timer = 0;
-				var nextScene = new ResultScene();
-				SceneFadeOut(this, nextScene, "black", SCENE_FADE_TIME);
+				SceneFadeOut(this, ResultScene, "black", SCENE_FADE_TIME);
 				this.onenterframe = null;
 			} 
 			
@@ -102,9 +146,6 @@ GameScene = Class.create(Scene,{
 				var stringTime = timer / Math.pow(10, TIME_MAX - i - 1) % 10;
 				timeGraphArray[i].frame = stringTime;
 			}
-			
-			// あたり判定をとる
-			itemMgr.Hit();
 			
 			// アイテムを作成する
 			if(counter > 60)
@@ -117,7 +158,6 @@ GameScene = Class.create(Scene,{
 			
 			// 得点を更新する(10進数)
 			getPointLabel.text = g_totalScore.toString(10);
-			
 		}	
 		
 		// 背景色を設定
