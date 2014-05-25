@@ -43,7 +43,7 @@ TukumoTan = Class.create(Sprite,{
 				// 画像横幅の半分を引く
 				this.movePointX -= this.m_halfWidth;
 				// 等速で移動させるための処理
-				this.tl.clear().moveX(this.movePointX, Math.abs(this.movePointX - this.x) / TUKUMO_MOVE_SPEED);
+				this.tl.clear().moveX(this.movePointX, Math.abs(this.movePointX - this.x) / this.speed);
 				// 反転の有無
 				if(this.movePointX < this.x) this.flipFlag = true;
 				if(this.movePointX > this.x) this.flipFlag = false;

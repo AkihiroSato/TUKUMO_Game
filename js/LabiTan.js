@@ -19,7 +19,7 @@ LabiTan = Class.create(Sprite,{
 		this.m_halfWidth = this.width * 0.5;					// 横幅の半分のサイズ
 		this.m_centerX = this.x + this.m_halfWidth;				// 画像の中心位置のX座標
 		
-		this.m_existFrame = LABI_EXIST_TIME * GAME_FPS;			// らびたんが画面上に存在している時間
+		this.m_existFrame = LABI_SUPPORT_TIME * GAME_FPS;		// らびたんが画面上に存在している時間
 		
 		//================================================================
 		// アイテムを自動追尾するAI

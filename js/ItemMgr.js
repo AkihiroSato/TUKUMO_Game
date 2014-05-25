@@ -19,7 +19,8 @@ ItemMgr = Class.create(EventTarget,{
 		//===============================================================
 		// 更新処理
 		//===============================================================
-		this.onenterframe = function(){
+		this.onenterframe = function()
+		{
 			for(var i = 0; i < this.m_items.length; i++)
 			{
 				// 画面外に出たら消す
@@ -66,7 +67,7 @@ ItemMgr = Class.create(EventTarget,{
 							this.parentNode.removeChild(this);
 						}
 					}
-					this.m_addNode.addChild(getLabel);
+					this.parentNode.addChild(getLabel);
 					hitFlag = true;
 				}
 			}

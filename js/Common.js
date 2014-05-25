@@ -10,7 +10,7 @@ var g_numberGraph = null;			// 数字の画像
 // 定数
 //=============================================================================
 
-const GAME_FPS = 42;				// フレームレートを指定する
+const GAME_FPS = 30;				// フレームレートを指定する
 const WIN_SIZE_WIDTH = 480;			// 画面の横幅
 const WIN_SIZE_HEIGHT = 320;		// 画面の縦幅
 const GAME_SIZE_WIDTH = 380;		//　つくもたんの移動できる範囲
@@ -18,7 +18,9 @@ const GAME_RIGHT_SPACE = WIN_SIZE_WIDTH - GAME_SIZE_WIDTH;	// 画面右のスペ
 const ITEM_SIZE = 32;				// アイテムのサイズ
 const TUKUMO_MOVE_SPEED = 3.1;		// つくもたんの移動速度
 const LABI_MOVE_SPEED = 1.5;		// らびたんの移動速度
-const LABI_EXIST_TIME = 15;			// らびたんが存在している時間
+const LABI_SUPPORT_TIME = 15;		// らびたんのサポートタイム
+const JUNK_SUPPORT_TIME = 15;		// じゃんくたんのサポートタイム
+const JUNK_UPSPEED = 2.0;			// つくもたんのスピードアップ量
 const SUPPORT_CION_SIZE = 64;		// サポートアイコンのサイズ
 const GAME_LIMIT_TIME = 60;			// ゲームのタイムリミット
 const SCORE_MAX = 8;				// スコアの最大桁数

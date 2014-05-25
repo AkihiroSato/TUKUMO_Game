@@ -11,7 +11,6 @@ GameScene = Class.create(Scene,{
 		var counter = 0;					// フレームカウンター
 		var itemArray = [];					// 商品を格納する配列
 		var getPointLabel = new Label();	// 得点の表示ラベル
-		var timerLabel = new Label();		// 残り時間を表示
 		var timer;							// タイマー
 		var timeGraphArray = [];			// タイムを表示する画像配列（2ケタ）
 		var tukumo = null;					// つくもたん
@@ -75,7 +74,7 @@ GameScene = Class.create(Scene,{
 		// アイテム管理を作成
 		//------------------------------------------------------------------
 		
-		var itemMgr = new ItemMgr(this);
+		var itemMgr = new ItemMgr();
 		this.addChild(itemMgr);
 		
 		//------------------------------------------------------------------
@@ -95,22 +94,50 @@ GameScene = Class.create(Scene,{
 		labi_icon.image = g_game.assets[TEX_LABI_ICON];
 		labi_icon.x = GAME_SIZE_WIDTH + (GAME_RIGHT_SPACE - labi_icon.width) * 0.5;
 		labi_icon.y = 150;
+		
+		// タッチした時の動作を指定
 		labi_icon.ontouchstart = function()
 		{
+			// すでに使用済みの場合はスルーする
+			if(labi_icon.frame == 1) return;
+			
+			// アイコンを黒に切り替える
+			labi_icon.frame = 1;
+			
 			// らびたん生成
 			labi = new LabiTan(itemMgr);
 			thisScene.insertBefore(labi, uiGroup);
 		}
 		uiGroup.addChild(labi_icon);
 		
+		
 		// じゃんくたんアイコン
 		junk_icon = new Sprite(SUPPORT_CION_SIZE, SUPPORT_CION_SIZE);
 		junk_icon.image = g_game.assets[TEX_JUNK_ICON];
 		junk_icon.x = GAME_SIZE_WIDTH + (GAME_RIGHT_SPACE - junk_icon.width) * 0.5;
 		junk_icon.y = 250;
+		
+		// タッチした時の動作を指定
+		junk_icon.ontouchstart = function()
+		{
+			// すでに使用済みの場合はスルーする
+			if(junk_icon.frame == 1) return;
+			
+			// アイコンを使用済み画像に切り替える
+			junk_icon.frame = 1;
+			
+			// つくもたんの移動速度を一時的にアップさせる
+			tukumo.speed += JUNK_UPSPEED;
+			this.tl.delay(GAME_FPS * JUNK_SUPPORT_TIME).then(function(){tukumo.speed = TUKUMO_MOVE_SPEED;});
+		}
+		
 		uiGroup.addChild(junk_icon);
 		
+		
+		//------------------------------------------------------------------
 		// 得点を表示
+		//------------------------------------------------------------------]
+		
 		getPointLabel.x = GAME_SIZE_WIDTH;
 		getPointLabel.y = 0;
 		getPointLabel.font = "italic 32px 'ＭＳ 明朝'";

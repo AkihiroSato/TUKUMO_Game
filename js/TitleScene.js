@@ -19,13 +19,5 @@ TitleScene = Class.create(Scene,{
 		sceneChangeButton.x = 100;
 		sceneChangeButton.y = 200;
 		
-		/*
-		// タッチをしたらフェードアウトに入る
-		this.ontouchstart = function()
-		{
-			var gameScene = new GameScene();
-			SceneFadeOut(this, gameScene, "black", SCENE_FADE_TIME);
-		}
-		*/
 	}
 })
